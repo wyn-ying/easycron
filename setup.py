@@ -4,9 +4,9 @@ with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='easycron',
-    version='0.1.0',
-    url='https://github.com/wyn-ying/easycron',
+    name='pyeasycron',
+    version='0.1.1',
+    url='https://github.com/wyn-ying/pyeasycron',
     author='wyn-ying',
     author_email='yingwen.wyn@gmail.com',
     description='An easy way to make function run as cron',

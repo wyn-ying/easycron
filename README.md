@@ -1,4 +1,4 @@
-# easycron
+# pyeasycron
 
 ## Brief Intro
 
@@ -7,7 +7,7 @@ An easy way to make function run as cron.
 ## Installation
 
 ``` bash
-pip3 install easycron
+pip3 install pyeasycron
 ```
 
 ## Usage
