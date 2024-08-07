@@ -2,7 +2,7 @@
 
 ## Brief Intro
 
-A easy way to make function run as cron.
+An easy way to make function run as cron.
 
 ## Installation
 

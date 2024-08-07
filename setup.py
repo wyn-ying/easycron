@@ -9,7 +9,7 @@ setup(
     url='https://github.com/wyn-ying/easycron',
     author='wyn-ying',
     author_email='yingwen.wyn@gmail.com',
-    description='A easy way to make function run as cron',
+    description='An easy way to make function run as cron',
     keywords=['easycron', 'cron', 'cronjob', 'schedule', 'automation'],
     long_description=long_description,
     long_description_content_type='text/markdown',
