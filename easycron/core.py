@@ -2,6 +2,8 @@ from typing import List, Dict, Set, Callable, Union
 from dataclasses import dataclass, field
 from croniter import croniter
 from datetime import datetime
+import threading
+import copy
 import time
 
 
@@ -54,7 +56,13 @@ def cron(cron_expr: Union[str, List[str]]) -> None:
     return wrapper_func
 
 
-def run():
+def get_croninfo() -> Dict[str, CronInfo]:
+    global _crons
+    crons = copy.deepcopy(_crons)
+    return crons
+
+
+def _run():
     global _crons
     while True:
         now = datetime.now()
@@ -71,3 +79,12 @@ def run():
             func()
         if (datetime.now() - now).seconds < 1:
             time.sleep(1)
+
+
+def run(block: bool = True):
+    if block:
+        _run()
+    else:
+        thread = threading.Thread(target=_run)
+        thread.setDaemon(True)
+        thread.start()

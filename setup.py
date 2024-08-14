@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='pyeasycron',
-    version='0.1.1',
+    version='0.1.2',
     url='https://github.com/wyn-ying/pyeasycron',
     author='wyn-ying',
     author_email='yingwen.wyn@gmail.com',
