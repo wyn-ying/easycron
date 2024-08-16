@@ -16,23 +16,33 @@ class CronInfo:
 
 
 _crons: Dict[str, CronInfo] = {}
+_func2expr: Dict[Callable, List[str]] = {}
 CRON = croniter('* * * * *')
 
 
 def register(func: Callable, cron_expr: str) -> None:
-    global _crons
+    global _crons, _func2expr
     if cron_expr not in _crons.keys():
-        _crons[cron_expr] = CronInfo(cron_expr, [])
-    _crons[cron_expr].funcs.append(func)
+        cron_info = CronInfo(cron_expr, [])
+        cron_info.iter = croniter(cron_expr, datetime.now())
+        cron_info.nextdt = cron_info.iter.get_next(datetime)
+        _crons[cron_expr] = cron_info
+    if func not in _crons[cron_expr].funcs:
+        _crons[cron_expr].funcs.append(func)
+    if func not in _func2expr.keys():
+        _func2expr[func] = []
+    if cron_expr not in _func2expr[func]:
+        _func2expr.append(cron_expr)
 
 
 def cancel(func: Callable) -> None:
-    global _crons
+    global _func2expr, _crons
     todrop = []
-    for cron_expr, cron_info in _crons.items():
+    tocancel = _func2expr.get(func, [])
+    for cron_expr in tocancel:
+        cron_info = _crons[cron_expr]
         funclist = cron_info.funcs
-        if func in funclist:
-            funclist.remove(func)
+        funclist.remove(func)
         if len(funclist) == 0:
             todrop.append(cron_expr)
     for drop_cron in todrop:
@@ -62,15 +72,18 @@ def get_croninfo() -> Dict[str, CronInfo]:
     return crons
 
 
+def get_func2expr() -> Dict[Callable, List[str]]:
+    global _func2expr
+    func2expr = copy.deepcopy(_func2expr)
+    return func2expr
+
+
 def _run():
     global _crons
     while True:
         now = datetime.now()
         trigger_funcs: Set[Callable] = set()
-        for cron_expr, cron_info in _crons.items():
-            if cron_info.iter is None:
-                cron_info.iter = croniter(cron_expr, now)
-                cron_info.nextdt = cron_info.iter.get_next(datetime)
+        for _, cron_info in _crons.items():
             if now >= cron_info.nextdt:
                 cron_info.nextdt = cron_info.iter.get_next(datetime)
                 for func in cron_info.funcs:
