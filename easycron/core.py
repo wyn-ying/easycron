@@ -32,7 +32,7 @@ def register(func: Callable, cron_expr: str) -> None:
     if func not in _func2expr.keys():
         _func2expr[func] = []
     if cron_expr not in _func2expr[func]:
-        _func2expr.append(cron_expr)
+        _func2expr[func].append(cron_expr)
 
 
 def cancel(func: Callable) -> None:
