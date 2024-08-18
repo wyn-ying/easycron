@@ -146,6 +146,9 @@ def func1():
 def func2():
     print(f"in func2: {datetime.now()}")
 
+def func3():
+    print(f"in func3: {datetime.now()}")
+
 if __name__ == '__main__':
     easycron.register(func1, interval=timedelta(minutes=3))
     easycron.register(func2, cron_expr='*/2 * * * *')
@@ -155,6 +158,7 @@ if __name__ == '__main__':
     ...
 
     easycron.cancel(func2)
+    easycron.register(func3, interval=timedelta(minutes=5))
     # do other things
     ...
 ```
