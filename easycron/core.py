@@ -34,7 +34,6 @@ class IntvInfo:
 
 _crons: Dict[str, CronInfo] = {}
 _func2expr: Dict[Callable, List[str]] = {}
-CRON = croniter('* * * * *')
 _intvs: Dict[timedelta, IntvInfo] = {}
 _func2tmdt: Dict[Callable, List[timedelta]] = {}
 
@@ -94,21 +93,20 @@ def cancel(func: Callable) -> None:
         funclist = intv_info.funcs
         funclist.remove(func)
         if len(funclist) == 0:
-            todrop.append(intv_info)
+            todrop.append(interval)
     for drop_intv in todrop:
         _intvs.pop(drop_intv, None)
 
 
 def cron(cron_expr: Union[str, List[str]]) -> None:
     def wrapper_func(func: Callable) -> Callable:
-        global CRON
         if isinstance(cron_expr, str):
-            if not CRON.is_valid(cron_expr):
+            if not croniter.is_valid(cron_expr):
                 raise ValueError(f'cron expression {cron_expr} not valid')
             register(func, cron_expr=cron_expr)
         elif isinstance(cron_expr, list):
             for cron_expr_ in cron_expr:
-                if not CRON.is_valid(cron_expr_):
+                if not croniter.is_valid(cron_expr_):
                     raise ValueError(f'cron expression {cron_expr_} not valid')
                 register(func, cron_expr=cron_expr_)
         return func
